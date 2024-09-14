@@ -31,10 +31,11 @@ export function changeEntity(id, data) {
 }
 
 // 删除食材
-export function destroyEntity(id) {
+export function destroyEntity(id, data) {
   return request({
     url: `/${entity}/${id}`,
     method: "delete",
+    data
   });
 }
 

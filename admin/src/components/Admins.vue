@@ -125,6 +125,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { adminStore } from "../stores/admin";
 import {
   getEntities,
   createEntity,
@@ -204,8 +205,13 @@ const addEntity = async () => {
     formData.append("avatar", file.value); // 将图片的raw作为image发送
     formData.append("adminName", newEntity.value.adminName);
     formData.append("password", newEntity.value.password);
-
+    // log
+    formData.append("peopleId", localStorage.getItem('adminId'));
+    formData.append("entity", '管理员');
+    formData.append("operationType", '新增');
+    formData.append("details", `管理员${localStorage.getItem('adminId')}新增了管理员账号：${newEntity.value.adminName}`);
     await createEntity(formData);
+
     fetchEntities();
     // 变量
     newEntity.value.avatar = "";
@@ -238,6 +244,12 @@ const updateEntity = async () => {
     formData.append("adminName", editEntityForm.value.adminName);
     formData.append("password", editEntityForm.value.password);
 
+    // log
+    formData.append("peopleId", localStorage.getItem('adminId'));
+    formData.append("entity", '管理员');
+    formData.append("operationType", '修改');
+    formData.append("details", `管理员${localStorage.getItem('adminId')}编辑了账号：${editEntityForm.value.adminName}`);
+
     await changeEntity(editEntityForm.value.adminId, formData); // 变量
     fetchEntities();
     editDialogVisible.value = false;
@@ -248,7 +260,13 @@ const updateEntity = async () => {
 
 const deleteEntity = async (entityId) => {
   try {
-    await destroyEntity(entityId);
+    const data = {
+      peopleId: localStorage.getItem('adminId'),
+      entity: "管理员",
+      operationType: "删除",
+      details: `管理员${localStorage.getItem('adminId')}删除了id：${entityId}`
+    }
+    await destroyEntity(entityId, data);
     fetchEntities();
   } catch (error) {
     console.error("Error deleting:", error);

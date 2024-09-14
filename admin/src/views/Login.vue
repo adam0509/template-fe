@@ -68,7 +68,7 @@ const handleLogin = async () => {
       if (response.status == 200) {
         // Store the token
         localStorage.setItem("token", response.data.accessToken);
-        adminStore.adminId = response.data.adminId;
+        localStorage.setItem("adminId", response.data.admin.adminId);
 
         // Redirect to home page
         router.push({ name: "home" });
